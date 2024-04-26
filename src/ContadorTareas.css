@@ -1,0 +1,11 @@
+.Titulo{
+    font-size: 24px;
+  text-align: center;
+  margin: 0;
+  padding: 48px;
+  font-weight: normal;
+}
+
+.Titulo span{
+    font-weight: bold;
+}
