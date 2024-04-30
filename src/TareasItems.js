@@ -1,4 +1,6 @@
 import './TareasItems.css'
+import { FaRegSquareCheck } from "react-icons/fa6";
+import { FaX } from "react-icons/fa6";
 
 function TareasItems(props){
     return(
@@ -6,13 +8,13 @@ function TareasItems(props){
         <span 
           className={`Icon Icon-check ${props.completado && "Icon-check--active"}`}
           onClick={props.onComplete}
-          >V
+          ><FaRegSquareCheck></FaRegSquareCheck>
         </span>
         <p className={`TodoItem-p ${props.completado && "TodoItem-p--complete"}`}>{ props.text }</p>
         <span 
           className="Icon Icon-delete"
           onClick={props.onDelete}
-          >X
+          ><FaX></FaX>
         </span>
       </li>
     );

@@ -6,18 +6,40 @@ import { CrearTarea } from './CrearTarea';
 import './App.css';
 import React from 'react';
 
-const defaultTarea = [
+/* defaultTarea = [
   {text: 'Tarea N° 1', completado: false}, 
   {text: 'Tarea N° 2', completado: false},
   {text: 'ESTADOS', completado: true}
-];
+];*/
+
+function useLocalStorage(itemName, initialValue){
+  const localStorageItem = localStorage.getItem(itemName);
+  let parsedItem;
+  if(localStorageItem){
+    parsedItem = JSON.parse(localStorageItem);
+  }else{
+    localStorage.setItem(itemName, JSON.stringify([]));
+    parsedItem = [];
+  }
+
+  const [item, setItem] = React.useState(parsedItem);
+
+  const guardarItems = (nuevaItem) => {
+    localStorage.setItem(itemName, JSON.stringify(nuevaItem));
+    setItem(nuevaItem);
+  };
+
+  return [item, guardarItems];
+}
 
 function App() {
 
+  
   const [searchValue, setSearchValue] = React.useState('');
     console.log(searchValue);
-  const [tareas, setTareas] = React.useState(defaultTarea);
+  const [tareas, guardarItems] = useLocalStorage('TODOS_V1', []);
   const tareasCompletadas = tareas.filter( tarea => !!tarea.completado).length;
+  const tareasIncompletas = tareas.length - tareasCompletadas;
   const totalTareas = tareas.length;
   const tareasBuscadas = tareas.filter(
     (tarea) => {
@@ -31,7 +53,7 @@ function App() {
       (tarea) => tarea.text == text
     );
     nuevasTareas[indiceTarea].completado = true;
-    setTareas(nuevasTareas);
+    guardarItems(nuevasTareas);
   };
 
   const borrarTarea = (text) => {
@@ -40,12 +62,14 @@ function App() {
       (tarea) => tarea.text == text
     );
     nuevasTareas.splice(indiceTarea, 1);
-    setTareas(nuevasTareas);
+    guardarItems(nuevasTareas);
   };
+
+  
 
   return (
     <React.Fragment>
-      <ContadorTareas hechos={tareasCompletadas} faltantes={totalTareas}/>
+      <ContadorTareas hechos={tareasCompletadas} faltantes={tareasIncompletas}/>
 
       <BuscadorTareas 
         searchValue = {searchValue}
