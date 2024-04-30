@@ -19,6 +19,29 @@ function App() {
   const [tareas, setTareas] = React.useState(defaultTarea);
   const tareasCompletadas = tareas.filter( tarea => !!tarea.completado).length;
   const totalTareas = tareas.length;
+  const tareasBuscadas = tareas.filter(
+    (tarea) => {
+      return tarea.text.toLowerCase().includes(searchValue.toLowerCase())
+    }
+  );
+
+  const completados = (text) => {
+    const nuevasTareas = [...tareas];
+    const indiceTarea = nuevasTareas.findIndex(
+      (tarea) => tarea.text == text
+    );
+    nuevasTareas[indiceTarea].completado = true;
+    setTareas(nuevasTareas);
+  };
+
+  const borrarTarea = (text) => {
+    const nuevasTareas = [...tareas];
+    const indiceTarea = nuevasTareas.findIndex(
+      (tarea) => tarea.text == text
+    );
+    nuevasTareas.splice(indiceTarea, 1);
+    setTareas(nuevasTareas);
+  };
 
   return (
     <React.Fragment>
@@ -30,10 +53,13 @@ function App() {
       />
 
       <TareasLista>
-        {defaultTarea.map(tarea => (
+        {tareasBuscadas.map(tarea => (
         <TareasItems key={tarea.text}
                      text={tarea.text}
-                     completado={tarea.completado}/>))}
+                     completado={tarea.completado}
+                     onComplete = {() => completados(tarea.text)}
+                     onDelete = {() => borrarTarea(tarea.text)}
+                     />))}
       </TareasLista>
 
       <CrearTarea/>
